@@ -1,0 +1,119 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    
+    <changeSet id="create_tables" author="Bhavik Patel">
+
+    <createTable tableName="users">
+      <column name="id" type="int" autoIncrement="true">
+       <constraints primaryKey="true"/>
+      </column>
+      <column name="first_name" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="last_name" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="varchar(255)">
+        <constraints unique="true" nullable="false" />
+      </column>
+      <column name="password" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="mobile" type="varchar(15)">
+        <constraints nullable="true" />
+      </column>
+      <column name="is_active" type="boolean">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_admin" type="boolean">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdAt" type="datetime" defaultValueComputed="now()" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="updatedAt" type="datetime" defaultValueComputed="now()"/>
+    </createTable>
+
+    <createTable tableName="address">
+      <column name="id" type="int" autoIncrement="true">
+       <constraints primaryKey="true"/>
+      </column>
+      <column name="user_id" type="int">
+        <constraints nullable="false"/>
+      </column>
+      <column name="address" type="varchar(200)" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="city" type="varchar(100)" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="state" type="varchar(100)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="country" type="varchar(100)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="pincode" type="int">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_active" type="boolean" defaultValueComputed="true">
+        <constraints nullable="false"/>
+      </column>
+      <column name="createdAt" type="datetime" defaultValueComputed="now()" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="updatedAt" type="datetime" defaultValueComputed="now()"/>
+    </createTable>
+    <createIndex tableName="address" indexName="idx_address_user_id">
+      <column name="userId"/>
+    </createIndex>
+    <addForeignKeyConstraint baseColumnNames="userId" baseTableName="address" constraintName="address_userId_fkey" deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="CASCADE" referencedColumnNames="id" referencedTableName="users" validate="true" />
+
+    <createTable tableName="cart">
+      <column name="id" type="int" autoIncrement="true">
+       <constraints primaryKey="true"/>
+      </column>
+      <column name="user_id" type="int" nullable="false"/>
+      <column name="items" type="jsonb" nullable="false"/>
+      <column name="is_active" type="boolean" nullable="false"/>
+      <column name="createdAt" type="datetime" defaultValueComputed="now()" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="updatedAt" type="datetime" defaultValueComputed="now()"/>
+      <constraint foreignKey="fk_user_cart" name="fk_user_cart"
+        referenceTable="users" referenceColumn="id"
+        onDelete="RESTRICT" onUpdate="CASCADE"/>
+    </createTable>
+
+    <createTable tableName="inventory">
+      <column name="id" type="int" autoIncrement="true">
+       <constraints primaryKey="true"/>
+      </column>
+      <column name="addedBy" type="integer" nullable="false"/>
+      <column name="name" type="varchar(200)" nullable="false"/>
+      <column name="description" type="varchar(200)" nullable="false"/>
+      <column name="quantity" type="integer" length="10" nullable="false"/>
+      <column name="createdAt" type="datetime" defaultValueComputed="now()" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="updatedAt" type="datetime" defaultValueComputed="now()"/>
+    </createTable>
+
+    <createTable tableName="logs">
+      <column name="id" type="int" autoIncrement="true">
+       <constraints primaryKey="true"/>
+      </column>
+      <column name="metadata" type="json" nullable="false"/>
+      <column name="activity" type="varchar(255)" nullable="true"/>  <column name="userId" type="integer" nullable="false"/>
+      <column name="createdAt" type="datetime" defaultValueComputed="now()" >
+        <constraints nullable="false"/>
+      </column>
+      <column name="updatedAt" type="datetime" defaultValueComputed="now()"/>
+      <constraint foreignKey="fk_user_log" name="fk_user_log"
+        referenceTable="users" referenceColumn="id"/>
+    </createTable>
+    </changeSet>
+</databaseChangeLog>

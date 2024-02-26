@@ -1,0 +1,5 @@
+changeLogFile=changelog.xml
+liquibase.command.url=jdbc:postgresql://localhost:5432/questionpro
+liquibase.command.username: postgres
+liquibase.command.password: admin
+liquibase.hub.mode=off
